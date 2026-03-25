@@ -441,17 +441,18 @@
       return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
     }
 
-    /* — Tendrils — flowing organic curves — */
-    var TENDRIL_COUNT = isTouch ? 5 : 8;
+    /* — Tendrils — flowing organic curves spread across FULL document — */
+    var TENDRIL_COUNT = isTouch ? 6 : 12;
     var tendrils = [];
     for (var t = 0; t < TENDRIL_COUNT; t++) {
       tendrils.push({
-        baseY: (t + 1) / (TENDRIL_COUNT + 1),
+        // Position as fraction of full document, spaced evenly
+        baseYfrac: (t + 0.5) / TENDRIL_COUNT,
         speed: 0.3 + Math.random() * 0.4,
-        amp: 60 + Math.random() * 80,
+        amp: 50 + Math.random() * 70,
         freq: 0.002 + Math.random() * 0.002,
         phase: Math.random() * Math.PI * 2,
-        color: t % 3 // 0=purple, 1=cyan, 2=pink
+        color: t % 3
       });
     }
 
@@ -461,17 +462,18 @@
       [236, 72, 153]   // pink
     ];
 
-    /* — Floating organisms — */
-    var ORG_COUNT = isTouch ? 15 : 35;
+    /* — Floating organisms — spread across FULL document height — */
+    var ORG_COUNT = isTouch ? 20 : 60;
     var orgs = [];
     for (var o = 0; o < ORG_COUNT; o++) {
       orgs.push({
-        x: Math.random() * 1.2 - 0.1,
-        y: Math.random() * 1.2 - 0.1,
+        x: Math.random(),
+        // yDoc = position as fraction of full document height
+        yDoc: Math.random(),
         size: 2 + Math.random() * 4,
         pulse: Math.random() * Math.PI * 2,
         pulseSpeed: 0.02 + Math.random() * 0.03,
-        drift: 0.0002 + Math.random() * 0.0003,
+        drift: 0.0001 + Math.random() * 0.0002,
         angle: Math.random() * Math.PI * 2,
         color: Math.floor(Math.random() * 3)
       });
@@ -493,11 +495,13 @@
       // Smooth mouse & scroll
       mouseSmX += (mouseX - mouseSmX) * 0.05;
       mouseSmY += (mouseY - mouseSmY) * 0.05;
-      scrollSmooth += (scrollY - scrollSmooth) * 0.08;
-      var scrollFactor = scrollSmooth * 0.15; // parallax depth
+      scrollSmooth += (scrollY - scrollSmooth) * 0.1;
 
-      // Auto-spawn pulses
-      if (time - lastPulse > 2.5) {
+      // Full document height for positioning
+      var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, H * 2);
+
+      // Auto-spawn pulses at random visible positions
+      if (time - lastPulse > 2) {
         spawnPulse(Math.random() * W, Math.random() * H);
         lastPulse = time;
       }
@@ -516,11 +520,16 @@
         ctx.stroke();
       }
 
-      // — Draw tendrils —
+      // — Draw tendrils — positioned across full document, camera = scroll —
       for (var t = 0; t < tendrils.length; t++) {
         var td = tendrils[t];
         var c = colors[td.color];
-        var baseY = td.baseY * H - scrollFactor * (0.5 + t * 0.15);
+        // Absolute Y in document space, then subtract scroll to get screen Y
+        var absY = td.baseYfrac * docH;
+        var screenY = absY - scrollSmooth;
+
+        // Only draw if visible (within viewport + margin)
+        if (screenY < -200 || screenY > H + 200) continue;
 
         ctx.beginPath();
         for (var x = 0; x <= W; x += 3) {
@@ -530,43 +539,50 @@
           var n3 = noise(x * 0.003, time * 0.3 + t) * td.amp * 0.6;
 
           // Mouse distortion
+          var dy = screenY + n1 + n2 + n3 - mouseSmY;
           var dx = x - mouseSmX;
-          var dy = baseY + n1 + n2 + n3 - mouseSmY;
           var dist = Math.sqrt(dx * dx + dy * dy);
           var mouseEffect = 0;
           if (dist < 250) {
             mouseEffect = (1 - dist / 250) * 60 * (dy > 0 ? 1 : -1);
           }
 
-          var y = baseY + n1 + n2 + n3 + mouseEffect;
+          var y = screenY + n1 + n2 + n3 + mouseEffect;
           if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0.07)';
+        ctx.strokeStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0.08)';
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
         // Glow line
-        ctx.strokeStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0.03)';
-        ctx.lineWidth = 8;
+        ctx.strokeStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0.035)';
+        ctx.lineWidth = 10;
         ctx.stroke();
       }
 
-      // — Draw floating organisms —
+      // — Draw floating organisms — full document, only visible ones —
+      var visibleOrgs = [];
       for (var o = 0; o < orgs.length; o++) {
         var org = orgs[o];
         org.pulse += org.pulseSpeed;
         org.angle += org.drift;
-        org.x += Math.cos(org.angle) * org.drift * 2;
-        org.y += Math.sin(org.angle) * org.drift * 1.5;
+        org.x += Math.cos(org.angle) * org.drift;
+        org.yDoc += Math.sin(org.angle) * org.drift * 0.3;
 
-        // Wrap
-        if (org.x > 1.15) org.x = -0.15;
-        if (org.x < -0.15) org.x = 1.15;
-        if (org.y > 1.15) org.y = -0.15;
-        if (org.y < -0.15) org.y = 1.15;
+        // Wrap X
+        if (org.x > 1.1) org.x = -0.1;
+        if (org.x < -0.1) org.x = 1.1;
+        // Wrap Y in document space
+        if (org.yDoc > 1.05) org.yDoc = -0.05;
+        if (org.yDoc < -0.05) org.yDoc = 1.05;
 
+        // Convert to screen coords
         var ox = org.x * W;
-        var oy = org.y * H - scrollFactor * (0.3 + o * 0.02);
+        var oy = org.yDoc * docH - scrollSmooth;
+
+        // Skip if off screen
+        if (oy < -80 || oy > H + 80) continue;
+
         var s = org.size * (1 + Math.sin(org.pulse) * 0.4);
 
         // Mouse attraction
@@ -581,7 +597,7 @@
         }
 
         var c = colors[org.color];
-        var alpha = 0.12 + Math.sin(org.pulse) * 0.06;
+        var alpha = 0.15 + Math.sin(org.pulse) * 0.08;
 
         // Core
         ctx.beginPath();
@@ -590,44 +606,36 @@
         ctx.fill();
 
         // Glow
-        var grd = ctx.createRadialGradient(ox, oy, 0, ox, oy, s * 4);
-        grd.addColorStop(0, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (alpha * 0.4) + ')');
+        var grd = ctx.createRadialGradient(ox, oy, 0, ox, oy, s * 5);
+        grd.addColorStop(0, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (alpha * 0.5) + ')');
         grd.addColorStop(1, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0)');
         ctx.beginPath();
-        ctx.arc(ox, oy, s * 4, 0, Math.PI * 2);
+        ctx.arc(ox, oy, s * 5, 0, Math.PI * 2);
         ctx.fillStyle = grd;
         ctx.fill();
+
+        visibleOrgs.push({ ox: ox, oy: oy, color: org.color, idx: o });
       }
 
-      // — Connect nearby organisms —
-      for (var i = 0; i < orgs.length; i++) {
-        for (var j = i + 1; j < orgs.length; j++) {
-          var ax = orgs[i].x * W, ay = orgs[i].y * H;
-          var bx = orgs[j].x * W, by = orgs[j].y * H;
-          var d = Math.sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by));
-          if (d < 150) {
-            var op = (1 - d / 150) * 0.06;
-            var c = colors[orgs[i].color];
+      // — Connect nearby visible organisms —
+      for (var i = 0; i < visibleOrgs.length; i++) {
+        for (var j = i + 1; j < visibleOrgs.length; j++) {
+          var a = visibleOrgs[i], b = visibleOrgs[j];
+          var d = Math.sqrt((a.ox - b.ox) * (a.ox - b.ox) + (a.oy - b.oy) * (a.oy - b.oy));
+          if (d < 180) {
+            var op = (1 - d / 180) * 0.08;
+            var c = colors[a.color];
             ctx.beginPath();
-            ctx.moveTo(ax, ay);
-            // Curved connection
-            var cx = (ax + bx) / 2 + Math.sin(time + i) * 15;
-            var cy = (ay + by) / 2 + Math.cos(time + j) * 15;
-            ctx.quadraticCurveTo(cx, cy, bx, by);
+            ctx.moveTo(a.ox, a.oy);
+            var cx = (a.ox + b.ox) / 2 + Math.sin(time + a.idx) * 20;
+            var cy = (a.oy + b.oy) / 2 + Math.cos(time + b.idx) * 20;
+            ctx.quadraticCurveTo(cx, cy, b.ox, b.oy);
             ctx.strokeStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + op + ')';
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
       }
-
-      // — Parallax CSS layers —
-      var aurora = document.querySelector('.aurora');
-      var morphs = document.querySelector('.morph-blobs');
-      var depthGrid = document.querySelector('.depth-grid');
-      if (aurora) aurora.style.transform = 'translateY(' + (-scrollSmooth * 0.08) + 'px)';
-      if (morphs) morphs.style.transform = 'translateY(' + (-scrollSmooth * 0.12) + 'px)';
-      if (depthGrid) depthGrid.style.transform = 'perspective(500px) rotateX(60deg) translateY(' + (-scrollSmooth * 0.05) + 'px)';
 
       // — Breathing vignette —
       var breathe = 0.5 + Math.sin(time * 0.8) * 0.08;
