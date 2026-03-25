@@ -2,6 +2,9 @@
 (function () {
   'use strict';
 
+  /* ── Enable entrance animations only when JS runs ── */
+  document.body.classList.add('js-ready');
+
   /* ── i18n translations ── */
   var T = {
     en: {
