@@ -31,17 +31,18 @@ ul { list-style: none; }
 
 /* ===== 4D BACKGROUND SYSTEM ===== */
 .bg-system {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  min-height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;
 }
 
 #bgCanvas {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 0;
-  pointer-events: none;
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+  pointer-events: none; z-index: 0;
 }
 
-/* Aurora beams */
+/* Aurora beams — full document height */
 .aurora {
-  position: absolute; inset: 0; overflow: hidden; opacity: 0.6;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; opacity: 0.6;
 }
 .aurora-beam {
   position: absolute; width: 200%; height: 60vh;
@@ -52,17 +53,17 @@ ul { list-style: none; }
 }
 .aurora-beam-1 {
   background: linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.12) 20%, rgba(6,182,212,0.08) 50%, rgba(236,72,153,0.06) 80%, transparent 100%);
-  top: -20%; left: -50%;
+  top: 5%; left: -50%;
   animation: auroraMove1 18s infinite;
 }
 .aurora-beam-2 {
   background: linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.1) 30%, rgba(139,92,246,0.08) 60%, transparent 100%);
-  top: 10%; left: -30%;
+  top: 35%; left: -30%;
   animation: auroraMove2 22s infinite;
 }
 .aurora-beam-3 {
   background: linear-gradient(90deg, transparent 0%, rgba(236,72,153,0.07) 25%, rgba(139,92,246,0.1) 55%, rgba(6,182,212,0.06) 85%, transparent 100%);
-  top: -5%; left: -60%;
+  top: 65%; left: -60%;
   animation: auroraMove3 26s infinite;
 }
 
@@ -82,8 +83,8 @@ ul { list-style: none; }
   50% { transform: translateX(40%) rotate(3deg) scaleY(1.3); }
 }
 
-/* Morphing blobs — 4D depth */
-.morph-blobs { position: absolute; inset: 0; }
+/* Morphing blobs — full document */
+.morph-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .morph-blob {
   position: absolute; border-radius: 50%; opacity: 0.04;
   will-change: transform, border-radius;
@@ -91,25 +92,25 @@ ul { list-style: none; }
 .blob-1 {
   width: 600px; height: 600px;
   background: radial-gradient(circle at 30% 30%, var(--accent), transparent 70%);
-  top: -8%; left: -5%;
+  top: 2%; left: -5%;
   animation: morphBlob1 20s ease-in-out infinite;
 }
 .blob-2 {
   width: 500px; height: 500px;
   background: radial-gradient(circle at 70% 40%, var(--accent2), transparent 70%);
-  top: 35%; right: -8%;
+  top: 25%; right: -8%;
   animation: morphBlob2 25s ease-in-out infinite;
 }
 .blob-3 {
   width: 450px; height: 450px;
   background: radial-gradient(circle at 50% 60%, var(--accent3), transparent 70%);
-  bottom: 0%; left: 25%;
+  top: 50%; left: 25%;
   animation: morphBlob3 22s ease-in-out infinite;
 }
 .blob-4 {
   width: 350px; height: 350px;
   background: radial-gradient(circle at 40% 50%, #818cf8, transparent 70%);
-  top: 60%; left: 5%;
+  top: 75%; left: 5%;
   animation: morphBlob4 28s ease-in-out infinite;
 }
 
@@ -137,7 +138,7 @@ ul { list-style: none; }
 
 /* Perspective depth grid */
 .depth-grid {
-  position: absolute; inset: 0;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background-image:
     linear-gradient(rgba(139,92,246,0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(139,92,246,0.025) 1px, transparent 1px);
@@ -151,7 +152,7 @@ ul { list-style: none; }
 
 /* Noise over everything */
 .bg-system .noise-overlay {
-  position: absolute; inset: 0; z-index: 10;
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat; background-size: 200px;
@@ -269,7 +270,7 @@ ul { list-style: none; }
 .burger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* ===== SECTION ===== */
-.section { position: relative; z-index: 1; padding: 140px 0; background: transparent; }
+.section { position: relative; z-index: 2; padding: 140px 0; background: transparent; }
 .section-alt { background: transparent; }
 .section-header { margin-bottom: 64px; position: relative; z-index: 2; }
 .tag {
@@ -287,7 +288,7 @@ ul { list-style: none; }
 
 /* ===== HERO ===== */
 .hero {
-  position: relative; z-index: 1; min-height: 100vh; min-height: 100dvh;
+  position: relative; z-index: 2; min-height: 100vh; min-height: 100dvh;
   display: flex; align-items: center;
 }
 .hero-inner {
@@ -499,7 +500,7 @@ ul { list-style: none; }
 .cta-socials svg { width: 18px; height: 18px; }
 
 /* ===== FOOTER ===== */
-.footer { position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 0; background: transparent; }
+.footer { position: relative; z-index: 2; border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 0; background: transparent; }
 .footer-inner { display: flex; align-items: center; justify-content: space-between; }
 .footer-logo { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; }
 .footer-logo .logo-mark { width: 28px; height: 28px; font-size: 0.6rem; border-radius: 8px; }
