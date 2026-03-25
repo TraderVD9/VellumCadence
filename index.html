@@ -13,15 +13,22 @@
 </head>
 <body>
 
-  <!-- Noise + Grid overlays -->
-  <div class="noise-overlay" aria-hidden="true"></div>
-  <div class="grid-overlay" aria-hidden="true"></div>
-
-  <!-- Floating orbs -->
-  <div class="orbs" aria-hidden="true">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+  <!-- 4D Background System -->
+  <div class="bg-system" aria-hidden="true">
+    <canvas id="bgCanvas"></canvas>
+    <div class="aurora">
+      <div class="aurora-beam aurora-beam-1"></div>
+      <div class="aurora-beam aurora-beam-2"></div>
+      <div class="aurora-beam aurora-beam-3"></div>
+    </div>
+    <div class="morph-blobs">
+      <div class="morph-blob blob-1"></div>
+      <div class="morph-blob blob-2"></div>
+      <div class="morph-blob blob-3"></div>
+      <div class="morph-blob blob-4"></div>
+    </div>
+    <div class="depth-grid"></div>
+    <div class="noise-overlay"></div>
   </div>
 
   <!-- Cursor glow (desktop only) -->

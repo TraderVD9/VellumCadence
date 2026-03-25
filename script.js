@@ -401,20 +401,114 @@
     });
   });
 
-  /* ── Parallax orbs ── */
-  if (!isTouch) {
-    var orbs = document.querySelectorAll('.orb');
-    var ticking = false;
-    window.addEventListener('scroll', function () {
-      if (!ticking) {
-        requestAnimationFrame(function () {
-          var s = window.scrollY;
-          orbs.forEach(function (o, i) { o.style.transform = 'translateY(' + (s * (0.015 + i * 0.01)) + 'px)'; });
-          ticking = false;
-        });
-        ticking = true;
+  /* ── 4D Canvas Background — Particle Network ── */
+  var canvas = document.getElementById('bgCanvas');
+  if (canvas) {
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var mouseX = 0, mouseY = 0;
+    var PARTICLE_COUNT = Math.min(80, Math.floor(window.innerWidth / 18));
+    var CONNECT_DIST = 160;
+    var dpr = window.devicePixelRatio || 1;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.scale(dpr, dpr);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', function () {
+      ctx.setTransform(1,0,0,1,0,0);
+      resizeCanvas();
+    });
+
+    function Particle() {
+      this.x = Math.random() * window.innerWidth;
+      this.y = Math.random() * window.innerHeight;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = (Math.random() - 0.5) * 0.3;
+      this.radius = Math.random() * 1.5 + 0.5;
+      this.alpha = Math.random() * 0.4 + 0.1;
+      // Cycle through accent colors
+      var colors = ['139,92,246', '6,182,212', '236,72,153'];
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    Particle.prototype.update = function (w, h) {
+      // Mouse repulsion
+      var dx = this.x - mouseX;
+      var dy = this.y - mouseY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 200 && dist > 0) {
+        var force = (200 - dist) / 200 * 0.02;
+        this.vx += (dx / dist) * force;
+        this.vy += (dy / dist) * force;
       }
-    }, { passive: true });
+      // Damping
+      this.vx *= 0.995;
+      this.vy *= 0.995;
+      this.x += this.vx;
+      this.y += this.vy;
+      // Wrap
+      if (this.x < 0) this.x = w;
+      if (this.x > w) this.x = 0;
+      if (this.y < 0) this.y = h;
+      if (this.y > h) this.y = 0;
+    };
+
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new Particle());
+    }
+
+    if (!isTouch) {
+      document.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+    }
+
+    function drawParticles() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      // Update & draw particles
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.update(w, h);
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + p.color + ',' + p.alpha + ')';
+        ctx.fill();
+
+        // Connect nearby particles
+        for (var j = i + 1; j < particles.length; j++) {
+          var p2 = particles[j];
+          var dx = p.x - p2.x;
+          var dy = p.y - p2.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            var opacity = (1 - dist / CONNECT_DIST) * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = 'rgba(' + p.color + ',' + opacity + ')';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    // Only run on desktop or if not low-power
+    if (!isTouch || window.innerWidth > 768) {
+      drawParticles();
+    }
   }
 
   /* ── Add SVG gradient def for result rings ── */
