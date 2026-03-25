@@ -408,6 +408,7 @@
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var W, H, time = 0;
     var mouseX = -9999, mouseY = -9999, mouseSmX = 0, mouseSmY = 0;
+    var scrollY = 0, scrollSmooth = 0;
 
     function resize() {
       W = window.innerWidth; H = window.innerHeight;
@@ -421,6 +422,7 @@
     if (!isTouch) {
       document.addEventListener('mousemove', function (e) { mouseX = e.clientX; mouseY = e.clientY; });
     }
+    window.addEventListener('scroll', function () { scrollY = window.scrollY; }, { passive: true });
 
     /* — Flow field noise (simplified Perlin-like) — */
     function noise(x, y) {
@@ -488,9 +490,11 @@
       time += 0.008;
       ctx.clearRect(0, 0, W, H);
 
-      // Smooth mouse
+      // Smooth mouse & scroll
       mouseSmX += (mouseX - mouseSmX) * 0.05;
       mouseSmY += (mouseY - mouseSmY) * 0.05;
+      scrollSmooth += (scrollY - scrollSmooth) * 0.08;
+      var scrollFactor = scrollSmooth * 0.15; // parallax depth
 
       // Auto-spawn pulses
       if (time - lastPulse > 2.5) {
@@ -516,7 +520,7 @@
       for (var t = 0; t < tendrils.length; t++) {
         var td = tendrils[t];
         var c = colors[td.color];
-        var baseY = td.baseY * H;
+        var baseY = td.baseY * H - scrollFactor * (0.5 + t * 0.15);
 
         ctx.beginPath();
         for (var x = 0; x <= W; x += 3) {
@@ -562,7 +566,7 @@
         if (org.y < -0.15) org.y = 1.15;
 
         var ox = org.x * W;
-        var oy = org.y * H;
+        var oy = org.y * H - scrollFactor * (0.3 + o * 0.02);
         var s = org.size * (1 + Math.sin(org.pulse) * 0.4);
 
         // Mouse attraction
@@ -616,6 +620,14 @@
           }
         }
       }
+
+      // — Parallax CSS layers —
+      var aurora = document.querySelector('.aurora');
+      var morphs = document.querySelector('.morph-blobs');
+      var depthGrid = document.querySelector('.depth-grid');
+      if (aurora) aurora.style.transform = 'translateY(' + (-scrollSmooth * 0.08) + 'px)';
+      if (morphs) morphs.style.transform = 'translateY(' + (-scrollSmooth * 0.12) + 'px)';
+      if (depthGrid) depthGrid.style.transform = 'perspective(500px) rotateX(60deg) translateY(' + (-scrollSmooth * 0.05) + 'px)';
 
       // — Breathing vignette —
       var breathe = 0.5 + Math.sin(time * 0.8) * 0.08;
