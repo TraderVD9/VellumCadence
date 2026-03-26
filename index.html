@@ -80,6 +80,34 @@
         <span class="hero-highlight" data-i18n="hero.title2">Stops The Scroll</span>
       </h1>
       <p class="hero-sub anim" data-i18n="hero.sub">We create AI-powered visuals and video content that capture attention, build trust, and turn followers into paying clients.</p>
+
+      <!-- ====== HERO VIDEO ====== -->
+      <div class="hero-video-section anim">
+        <!-- ВАРИАНТ A: MP4 — раскомментировать и указать src когда файл готов -->
+        <!--
+        <video class="hero-video" autoplay muted loop playsinline poster="/assets/video-poster.webp">
+          <source src="/assets/demo-reel.mp4" type="video/mp4">
+        </video>
+        -->
+
+        <!-- ВАРИАНТ B: YouTube/Vimeo embed — заменить VIDEO_ID -->
+        <!--
+        <div class="hero-video-embed">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID?autoplay=0&rel=0&modestbranding=1"
+            title="VellumCadence Demo Reel" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        -->
+
+        <!-- ЗАГЛУШКА — удалить когда подключено реальное видео -->
+        <div class="hero-video-placeholder">
+          <div class="vp-pulse-ring"></div>
+          <div class="vp-play-btn">&#9654;</div>
+          <p class="vp-label" data-i18n="hero.video">Demo Reel — Coming Soon</p>
+        </div>
+      </div>
+
       <div class="hero-ctas anim">
         <a href="#cta" class="btn btn-glow" data-i18n="hero.cta">Get Free Content Plan</a>
         <a href="#portfolio" class="btn btn-ghost" data-i18n="hero.cta2">See Our Work</a>
@@ -232,54 +260,77 @@
         <h2 class="section-title anim" data-i18n="port.title">What We Create</h2>
         <p class="section-sub anim" data-i18n="port.sub">These are the content formats we produce monthly. Real client examples coming soon.</p>
       </div>
-      <div class="port-grid">
-        <div class="port-card anim">
-          <div class="port-visual port-grad-1">
-            <div class="port-play">
-              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </div>
-          </div>
-          <h3 data-i18n="port.c1">Reels & Short Videos</h3>
+
+      <!-- Portfolio filters -->
+      <div class="portfolio-filters anim">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="reels">Reels</button>
+        <button class="filter-btn" data-filter="carousels">Carousels</button>
+        <button class="filter-btn" data-filter="brand">Brand Identity</button>
+        <button class="filter-btn" data-filter="before-after">Before / After</button>
+        <button class="filter-btn" data-filter="product">Product</button>
+        <button class="filter-btn" data-filter="templates">Templates</button>
+      </div>
+
+      <!-- Portfolio grid — 12 items, 2 per category -->
+      <div class="portfolio-grid">
+        <div class="portfolio-item anim" data-category="reels">
+          <div class="portfolio-placeholder port-grad-1"><span class="placeholder-icon">&#9654;</span><span class="placeholder-label">Reel · E-commerce</span></div>
+          <!-- <img src="/portfolio/reel-ecom.webp" alt="Reel E-commerce" loading="lazy" class="portfolio-img"> -->
+          <div class="portfolio-overlay"><span class="portfolio-tag">Reel</span><span class="portfolio-title">E-commerce Brand</span><button class="portfolio-open" data-src="/portfolio/reel-ecom.webp">View</button></div>
         </div>
-        <div class="port-card anim">
-          <div class="port-visual port-grad-2">
-            <div class="port-icon-inner">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="8" y1="2" x2="8" y2="22"/><line x1="16" y1="2" x2="16" y2="22"/></svg>
-            </div>
-          </div>
-          <h3 data-i18n="port.c2">Carousels</h3>
+        <div class="portfolio-item anim" data-category="reels">
+          <div class="portfolio-placeholder port-grad-2"><span class="placeholder-icon">&#9654;</span><span class="placeholder-label">Reel · Beauty Brand</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Reel</span><span class="portfolio-title">Beauty Brand</span><button class="portfolio-open" data-src="/portfolio/reel-beauty.webp">View</button></div>
         </div>
-        <div class="port-card anim">
-          <div class="port-visual port-grad-3">
-            <div class="port-icon-inner">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-            </div>
-          </div>
-          <h3 data-i18n="port.c3">Brand Identity</h3>
+        <div class="portfolio-item anim" data-category="carousels">
+          <div class="portfolio-placeholder port-grad-3"><span class="placeholder-icon">&#9776;</span><span class="placeholder-label">Carousel · Product</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Carousel</span><span class="portfolio-title">Product Launch</span><button class="portfolio-open" data-src="/portfolio/carousel-product.webp">View</button></div>
         </div>
-        <div class="port-card anim">
-          <div class="port-visual port-grad-4">
-            <div class="port-icon-inner">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M4 4l17 17"/></svg>
-            </div>
-          </div>
-          <h3 data-i18n="port.c4">Before / After</h3>
+        <div class="portfolio-item anim" data-category="carousels">
+          <div class="portfolio-placeholder port-grad-4"><span class="placeholder-icon">&#9776;</span><span class="placeholder-label">Carousel · Lifestyle</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Carousel</span><span class="portfolio-title">Lifestyle Content</span><button class="portfolio-open" data-src="/portfolio/carousel-lifestyle.webp">View</button></div>
         </div>
-        <div class="port-card anim">
-          <div class="port-visual port-grad-5">
-            <div class="port-icon-inner">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            </div>
-          </div>
-          <h3 data-i18n="port.c5">Product Shoots</h3>
+        <div class="portfolio-item anim" data-category="brand">
+          <div class="portfolio-placeholder port-grad-5"><span class="placeholder-icon">&#9672;</span><span class="placeholder-label">Brand Identity · Clinic</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Brand</span><span class="portfolio-title">Medical Clinic</span><button class="portfolio-open" data-src="/portfolio/brand-clinic.webp">View</button></div>
         </div>
-        <div class="port-card anim">
-          <div class="port-visual port-grad-6">
-            <div class="port-icon-inner">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            </div>
-          </div>
-          <h3 data-i18n="port.c6">Social Templates</h3>
+        <div class="portfolio-item anim" data-category="brand">
+          <div class="portfolio-placeholder port-grad-6"><span class="placeholder-icon">&#9672;</span><span class="placeholder-label">Brand Identity · SaaS</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Brand</span><span class="portfolio-title">SaaS Startup</span><button class="portfolio-open" data-src="/portfolio/brand-saas.webp">View</button></div>
+        </div>
+        <div class="portfolio-item anim" data-category="before-after">
+          <div class="portfolio-placeholder port-grad-1"><span class="placeholder-icon">&#8644;</span><span class="placeholder-label">Before / After · Salon</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">B/A</span><span class="portfolio-title">Beauty Salon</span><button class="portfolio-open" data-src="/portfolio/ba-salon.webp">View</button></div>
+        </div>
+        <div class="portfolio-item anim" data-category="before-after">
+          <div class="portfolio-placeholder port-grad-2"><span class="placeholder-icon">&#8644;</span><span class="placeholder-label">Before / After · Food</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">B/A</span><span class="portfolio-title">Restaurant Rebrand</span><button class="portfolio-open" data-src="/portfolio/ba-food.webp">View</button></div>
+        </div>
+        <div class="portfolio-item anim" data-category="product">
+          <div class="portfolio-placeholder port-grad-3"><span class="placeholder-icon">&#9633;</span><span class="placeholder-label">Product · Fashion</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Product</span><span class="portfolio-title">Fashion Brand</span><button class="portfolio-open" data-src="/portfolio/product-fashion.webp">View</button></div>
+        </div>
+        <div class="portfolio-item anim" data-category="product">
+          <div class="portfolio-placeholder port-grad-4"><span class="placeholder-icon">&#9633;</span><span class="placeholder-label">Product · HoReCa</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Product</span><span class="portfolio-title">Restaurant Menu</span><button class="portfolio-open" data-src="/portfolio/product-horeca.webp">View</button></div>
+        </div>
+        <div class="portfolio-item anim" data-category="templates">
+          <div class="portfolio-placeholder port-grad-5"><span class="placeholder-icon">&#9635;</span><span class="placeholder-label">Template · Story</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Template</span><span class="portfolio-title">Story Template Set</span><button class="portfolio-open" data-src="/portfolio/template-story.webp">View</button></div>
+        </div>
+        <div class="portfolio-item anim" data-category="templates">
+          <div class="portfolio-placeholder port-grad-6"><span class="placeholder-icon">&#9635;</span><span class="placeholder-label">Template · Post</span></div>
+          <div class="portfolio-overlay"><span class="portfolio-tag">Template</span><span class="portfolio-title">Post Template Set</span><button class="portfolio-open" data-src="/portfolio/template-post.webp">View</button></div>
+        </div>
+      </div>
+
+      <!-- Lightbox -->
+      <div class="lightbox" id="lightbox">
+        <div class="lb-backdrop"></div>
+        <div class="lb-content">
+          <button class="lb-close">&times;</button>
+          <img class="lb-img" src="" alt="">
         </div>
       </div>
     </div>
@@ -431,21 +482,24 @@
         <h2 class="cta-title" data-i18n="cta.title">Get Your Free Content Strategy</h2>
         <p class="cta-sub" data-i18n="cta.sub">Fill out this brief and our AI agent will analyze your niche, audience, and competitors — then deliver a personalized 30-day content plan.</p>
 
-        <form class="cta-form" id="ctaForm" action="https://formspree.io/f/vellumcadence@gmail.com" method="POST">
+        <!-- FORMSPREE: заменить XXXXXXXX на реальный endpoint из formspree.io -->
+        <form class="cta-form" id="ctaForm" action="https://formspree.io/f/XXXXXXXX" method="POST">
+          <input type="hidden" name="_subject" value="New Lead — VellumCadence">
+          <input type="hidden" name="_next" value="https://tradervd9.github.io/VellumCadence/?sent=true">
           <div class="form-row">
             <div class="form-group">
               <label for="formName" data-i18n="form.name">Your Name</label>
-              <input type="text" id="formName" required placeholder="John Doe">
+              <input type="text" id="formName" name="name" required placeholder="John Doe">
             </div>
             <div class="form-group">
               <label for="formEmail" data-i18n="form.email">Email Address</label>
-              <input type="email" id="formEmail" required placeholder="you@company.com">
+              <input type="email" id="formEmail" name="email" required placeholder="you@company.com">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label for="formBiz" data-i18n="form.business">Business Type</label>
-              <select id="formBiz" required>
+              <select id="formBiz" name="business_type" required>
                 <option value="" disabled selected data-i18n="form.bizPlaceholder">Select your industry</option>
                 <option value="ecommerce" data-i18n="form.bizOpt1">E-commerce</option>
                 <option value="beauty" data-i18n="form.bizOpt2">Beauty & Wellness</option>
@@ -458,16 +512,16 @@
             </div>
             <div class="form-group">
               <label for="formWebsite" data-i18n="form.website">Website / Instagram</label>
-              <input type="text" id="formWebsite" placeholder="@yourbrand or website URL">
+              <input type="text" id="formWebsite" name="website" placeholder="@yourbrand or website URL">
             </div>
           </div>
           <div class="form-group form-group-full">
             <label for="formGoals" data-i18n="form.goals">What are your main content goals?</label>
-            <textarea id="formGoals" rows="3" placeholder="e.g. More followers, brand awareness, lead generation, sales..."></textarea>
+            <textarea id="formGoals" name="goals" rows="3" placeholder="e.g. More followers, brand awareness, lead generation, sales..."></textarea>
           </div>
           <div class="form-group form-group-full">
             <label for="formBudget" data-i18n="form.budget">Monthly content budget</label>
-            <select id="formBudget">
+            <select id="formBudget" name="budget">
               <option value="" disabled selected data-i18n="form.budgetPlaceholder">Select range</option>
               <option value="500-1000">&euro;500 – &euro;1,000</option>
               <option value="1000-2000">&euro;1,000 – &euro;2,000</option>

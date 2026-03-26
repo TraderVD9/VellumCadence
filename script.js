@@ -709,14 +709,81 @@
     });
   });
 
-  /* ── Form handling ── */
+  /* ── Form — real submission via Formspree ── */
   var ctaForm = document.getElementById('ctaForm');
   var formSuccess = document.getElementById('formSuccess');
+
+  // Check if redirected back from Formspree with ?sent=true
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('sent') === 'true' && ctaForm && formSuccess) {
+    ctaForm.style.display = 'none';
+    formSuccess.style.display = 'block';
+    window.history.replaceState({}, '', window.location.pathname);
+    // Scroll to form section
+    var ctaSection = document.getElementById('cta');
+    if (ctaSection) ctaSection.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Validation before submit — does NOT preventDefault if valid
   if (ctaForm) {
     ctaForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      ctaForm.style.display = 'none';
-      formSuccess.style.display = 'block';
+      var name = document.getElementById('formName');
+      var email = document.getElementById('formEmail');
+      var biz = document.getElementById('formBiz');
+      var hasError = false;
+
+      [name, email, biz].forEach(function (input) {
+        if (!input.value || !input.value.trim()) {
+          input.classList.add('field-error');
+          input.classList.remove('field-ok');
+          hasError = true;
+        } else {
+          input.classList.remove('field-error');
+          input.classList.add('field-ok');
+        }
+      });
+
+      if (email.value && !email.value.includes('@')) {
+        email.classList.add('field-error');
+        hasError = true;
+      }
+
+      if (hasError) {
+        e.preventDefault(); // block submit only if invalid
+      }
+      // If valid — form submits naturally to Formspree
+    });
+  }
+
+  /* ── Portfolio Filtering ── */
+  document.querySelectorAll('.filter-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var filter = btn.getAttribute('data-filter');
+      document.querySelectorAll('.portfolio-item').forEach(function (item) {
+        var show = filter === 'all' || item.getAttribute('data-category') === filter;
+        item.style.display = show ? 'block' : 'none';
+      });
+    });
+  });
+
+  /* ── Lightbox ── */
+  var lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    document.querySelectorAll('.portfolio-open').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var src = btn.getAttribute('data-src') || '';
+        lightbox.querySelector('.lb-img').src = src;
+        lightbox.classList.add('open');
+      });
+    });
+    lightbox.querySelector('.lb-close').addEventListener('click', function () {
+      lightbox.classList.remove('open');
+    });
+    lightbox.querySelector('.lb-backdrop').addEventListener('click', function () {
+      lightbox.classList.remove('open');
     });
   }
 

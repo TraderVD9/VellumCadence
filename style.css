@@ -404,13 +404,61 @@ ul { list-style: none; }
 .who-card:hover h3 { color: #fff; }
 .who-card:hover .who-icon svg { stroke: var(--accent); }
 
-/* ===== PORTFOLIO ===== */
-.port-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-.port-card { border-radius: var(--radius); overflow: hidden; }
-.port-visual {
-  height: 220px; display: flex; align-items: center; justify-content: center;
-  position: relative; border-radius: var(--radius) var(--radius) 0 0;
+/* ===== HERO VIDEO ===== */
+.hero-video-section {
+  max-width: 820px; margin: 32px 0 8px; border-radius: 16px; overflow: hidden;
 }
+.hero-video { width: 100%; display: block; border-radius: 16px; }
+.hero-video-embed { position: relative; padding-bottom: 56.25%; height: 0; }
+.hero-video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 16px; }
+.hero-video-placeholder {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.1), rgba(236,72,153,0.08));
+  border: 1px solid var(--glass-border);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  border-radius: 16px; position: relative; overflow: hidden;
+}
+.vp-play-btn {
+  width: 72px; height: 72px; background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: #fff; backdrop-filter: blur(8px); z-index: 1;
+}
+.vp-pulse-ring {
+  position: absolute; width: 100px; height: 100px;
+  border: 2px solid rgba(139,92,246,0.4); border-radius: 50%;
+  animation: vpPulse 2s ease-out infinite;
+}
+@keyframes vpPulse { 0% { transform: scale(0.7); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+.vp-label { color: var(--text-dim); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; z-index: 1; }
+
+/* ===== PORTFOLIO ===== */
+.portfolio-filters {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px;
+}
+.filter-btn {
+  padding: 8px 20px; border-radius: 40px; border: 1px solid var(--glass-border);
+  background: transparent; color: var(--text-dim); font-size: 0.85rem; font-weight: 500;
+  font-family: var(--font); cursor: pointer; transition: all .3s;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--text); }
+.filter-btn.active { background: rgba(139,92,246,0.15); border-color: var(--accent); color: #fff; }
+
+.portfolio-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+}
+.portfolio-item {
+  border-radius: var(--radius); overflow: hidden; position: relative; cursor: pointer;
+}
+.portfolio-placeholder {
+  width: 100%; aspect-ratio: 4/3;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  border-radius: var(--radius);
+}
+.placeholder-icon { font-size: 2.2rem; color: rgba(255,255,255,0.5); }
+.placeholder-label { font-size: 0.8rem; color: rgba(255,255,255,0.45); font-weight: 500; }
+.portfolio-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+
 .port-grad-1 { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
 .port-grad-2 { background: linear-gradient(135deg, #06b6d4, #8b5cf6); }
 .port-grad-3 { background: linear-gradient(135deg, #ec4899, #f59e0b); }
@@ -418,20 +466,40 @@ ul { list-style: none; }
 .port-grad-5 { background: linear-gradient(135deg, #f59e0b, #ec4899); }
 .port-grad-6 { background: linear-gradient(135deg, #6366f1, #06b6d4, #10b981); }
 
-.port-play {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(255,255,255,0.3);
+.portfolio-overlay {
+  position: absolute; inset: 0; background: rgba(5,5,8,0.7); backdrop-filter: blur(4px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  opacity: 0; transition: opacity .3s;
 }
-.port-play svg { width: 22px; height: 22px; color: #fff; }
-.port-icon-inner svg { width: 40px; height: 40px; color: rgba(255,255,255,0.85); stroke: rgba(255,255,255,0.85); }
-.port-card h3 {
-  padding: 18px 20px; font-size: 1rem; font-weight: 600; color: #fff;
-  background: rgba(12,12,28,0.7); border: 1px solid rgba(255,255,255,0.12);
-  border-top: none; border-radius: 0 0 var(--radius) var(--radius);
+.portfolio-item:hover .portfolio-overlay { opacity: 1; }
+.portfolio-tag {
+  padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600;
+  background: rgba(139,92,246,0.25); border: 1px solid rgba(139,92,246,0.4); color: #fff;
+  text-transform: uppercase; letter-spacing: 0.1em;
 }
-.port-card:hover .port-visual { filter: brightness(1.1); }
+.portfolio-title { font-size: 0.9rem; font-weight: 600; color: #fff; }
+.portfolio-open {
+  padding: 8px 24px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; font-weight: 600;
+  font-family: var(--font); cursor: pointer; transition: all .3s; margin-top: 4px;
+}
+.portfolio-open:hover { background: rgba(139,92,246,0.3); border-color: var(--accent); }
+
+/* Lightbox */
+.lightbox { position: fixed; inset: 0; z-index: 10000; display: none; }
+.lightbox.open { display: flex; align-items: center; justify-content: center; }
+.lb-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.85); }
+.lb-content { position: relative; max-width: 90vw; max-height: 90vh; }
+.lb-img { max-width: 100%; max-height: 85vh; border-radius: 12px; display: block; }
+.lb-close {
+  position: absolute; top: -16px; right: -16px; width: 40px; height: 40px;
+  border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: #fff;
+  font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* Form field validation */
+.field-error { border-color: #e74c3c !important; }
+.field-ok { border-color: #27ae60 !important; }
 
 /* ===== SOCIAL PROOF ===== */
 .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 48px; }
